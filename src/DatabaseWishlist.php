@@ -3,7 +3,6 @@
 namespace Tnt\Wishlist;
 
 use dry\db\FetchException;
-use dry\Debug;
 use Tnt\Wishlist\Contracts\WishlistableInterface;
 use Tnt\Wishlist\Contracts\WishlistInterface;
 use Tnt\Wishlist\Contracts\WishlistItemInterface;
@@ -20,8 +19,6 @@ class DatabaseWishlist implements WishlistInterface
     {
         $this->model = $model;
         $this->identifier = $wishlistable->getWishlistIdentifier();
-
-        Debug::log($wishlistable->getWishlistIdentifier(), $wishlistable->getWishlistIdentifier());
 
         $this->restore();
     }
