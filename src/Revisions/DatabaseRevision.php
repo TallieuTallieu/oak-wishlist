@@ -1,6 +1,6 @@
 <?php
 
-namespace Tnt\Faq\Revisions;
+namespace Tnt\Wishlist\Revisions;
 
 use dry\db\Connection;
 use Tnt\Dbi\QueryBuilder;

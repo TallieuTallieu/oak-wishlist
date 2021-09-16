@@ -28,9 +28,9 @@ class SessionWishlist implements WishlistInterface
 	{
 		$classname = get_class($item);
 
-		if ($this->has($item)) {
-			return;
-		}
+        if ($this->has($item) || !$item->isWishlistable()) {
+            return;
+        }
 
 		if (!isset($this->items[$classname])) {
 			$this->items[$classname] = [];

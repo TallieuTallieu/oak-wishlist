@@ -7,8 +7,6 @@ use Oak\Contracts\Container\ContainerInterface;
 use Oak\Migration\MigrationManager;
 use Oak\Migration\Migrator;
 use Oak\ServiceProvider;
-use Tnt\Account\Facade\Auth;
-use Tnt\Account\SessionUserStorage;
 use Tnt\InternalApi\Facade\Api;
 use Tnt\Wishlist\Contracts\WishlistableInterface;
 use Tnt\Wishlist\Contracts\WishlistInterface;
@@ -19,13 +17,15 @@ class WishlistServiceProvider extends ServiceProvider
 {
 	public function boot(ContainerInterface $app)
 	{
+        $config = $app->get(RepositoryInterface::class);
+
 		Api::get('wishlist/items/', '\\Tnt\\Wishlist\\Controller\\ApiController::items');
 		Api::get('wishlist/toggle/', '\\Tnt\\Wishlist\\Controller\\ApiController::toggle');
 		Api::get('wishlist/add/', '\\Tnt\\Wishlist\\Controller\\ApiController::add');
 		Api::get('wishlist/remove/', '\\Tnt\\Wishlist\\Controller\\ApiController::remove');
 		Api::get('wishlist/clear/', '\\Tnt\\Wishlist\\Controller\\ApiController::clear');
 
-        if ($app->isRunningInConsole()) {
+        if ($app->isRunningInConsole() && $config->get('wishlist.driver') === 'database') {
             $migrator = $app->getWith(Migrator::class, [
                 'name' => 'wishlist'
             ]);
@@ -48,6 +48,7 @@ class WishlistServiceProvider extends ServiceProvider
 
         if ($config->get('wishlist.driver') === 'database') {
             $model = $config->get('wishlist.model', Model\Wishlist::class);
+
             $wishlistable = $config->get('wishlist.identifier');
 
             if (!$wishlistable) {
@@ -59,7 +60,6 @@ class WishlistServiceProvider extends ServiceProvider
             $app->set(WishlistableInterface::class, $wishlistable);
 
             $app->whenAsksGive(DatabaseWishlist::class, 'model', $model);
-            //$app->whenAsksGive(DatabaseWishlist::class, 'identifier', $identifier);
         }
 	}
 }

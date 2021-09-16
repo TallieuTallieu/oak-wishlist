@@ -27,7 +27,7 @@ class DatabaseWishlist implements WishlistInterface
     {
         $classname = get_class($item);
 
-        if ($this->has($item)) {
+        if ($this->has($item) || !$item->isWishlistable()) {
             return;
         }
 
