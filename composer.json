@@ -11,7 +11,7 @@
   ],
   "require": {
     "tallieutallieu/oak": "^1.0.0",
-    "tallieutallieu/dry-internal-api": "^1.0.0"
+    "tallieutallieu/dry-internal-api": "^1.0.2"
   },
   "autoload": {
     "psr-4": {
