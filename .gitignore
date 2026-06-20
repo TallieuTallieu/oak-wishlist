@@ -1,5 +1,6 @@
 .idea
 
+.wakatime-project
 /vendor/
 .DS_Store
 .env
