@@ -8,6 +8,9 @@ interface WishlistItemInterface
 
     public function getWishlistId(): int;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function serialize(): array;
 
     public function isWishlistable(): bool;

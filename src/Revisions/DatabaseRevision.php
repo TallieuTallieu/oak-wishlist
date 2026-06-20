@@ -5,28 +5,16 @@ namespace Tnt\Wishlist\Revisions;
 use dry\db\Connection;
 use Tnt\Dbi\QueryBuilder;
 
-/**
- * Class DatabaseRevision
- * @package Tnt\Ecommerce
- */
 abstract class DatabaseRevision
 {
-    /**
-     * @var QueryBuilder $queryBuilder
-     */
-    protected $queryBuilder;
+    protected QueryBuilder $queryBuilder;
 
-    /**
-     * DatabaseRevision constructor.
-     *
-     * @param QueryBuilder $queryBuilder
-     */
     public function __construct(QueryBuilder $queryBuilder)
     {
         $this->queryBuilder = $queryBuilder;
     }
 
-    protected function execute()
+    protected function execute(): void
     {
         $this->queryBuilder->build();
 

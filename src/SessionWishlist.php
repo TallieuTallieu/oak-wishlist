@@ -9,9 +9,9 @@ use Tnt\Wishlist\Contracts\WishlistItemInterface;
 class SessionWishlist implements WishlistInterface
 {
 	/**
-	 * @var array $items
+	 * @var array<class-string, array<int>>
 	 */
-	private $items = [];
+	private array $items = [];
 
 	/**
 	 * Wishlist constructor.
@@ -79,7 +79,7 @@ class SessionWishlist implements WishlistInterface
 	}
 
 	/**
-	 * @return array
+	 * @return array<int, WishlistItemInterface>
 	 */
 	public function getItems(): array
 	{
@@ -106,16 +106,16 @@ class SessionWishlist implements WishlistInterface
 	/**
 	 * Restores the items from the session
 	 */
-	private function restore()
+	private function restore(): void
 	{
 		$items = Session::get('wishlist');
-		$this->items = $items ? $items : [];
+		$this->items = is_array($items) ? $items : [];
 	}
 
 	/**
 	 * Saves the items to the session
 	 */
-	private function save()
+	private function save(): void
 	{
 		Session::set('wishlist', $this->items);
 		Session::save();

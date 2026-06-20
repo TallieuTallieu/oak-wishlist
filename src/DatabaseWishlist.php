@@ -9,12 +9,21 @@ use Tnt\Wishlist\Contracts\WishlistItemInterface;
 
 class DatabaseWishlist implements WishlistInterface
 {
-    public $model;
+    /**
+     * @var class-string
+     */
+    public string $model;
 
-    private $identifier;
+    private int $identifier;
 
-    private $items = [];
+    /**
+     * @var array<class-string, array<int>>
+     */
+    private array $items = [];
 
+    /**
+     * @param class-string $model
+     */
     public function __construct(WishlistableInterface $wishlistable, string $model)
     {
         $this->model = $model;
@@ -59,7 +68,7 @@ class DatabaseWishlist implements WishlistInterface
     {
         $classname = get_class($item);
 
-        return isset($this->items[$classname]) && in_array($item->getWishlistId(), $this->items[$classname]);
+        return isset($this->items[$classname]) && in_array($item->getWishlistId(), $this->items[$classname], true);
     }
 
     public function clear(): void
@@ -69,6 +78,9 @@ class DatabaseWishlist implements WishlistInterface
         $this->save();
     }
 
+    /**
+     * @return array<int, WishlistItemInterface>
+     */
     public function getItems(): array
     {
         $items = [];
@@ -93,13 +105,17 @@ class DatabaseWishlist implements WishlistInterface
         return $items;
     }
 
-    private function restore()
+    private function restore(): void
     {
         $items = $this->model::all('WHERE identifier = ?', $this->identifier);
 
         foreach ($items as $item) {
             $class = $item->wishlist_class;
             $id = $item->wishlist_id;
+
+            if (! is_string($class) || ! class_exists($class)) {
+                continue;
+            }
 
             $item = $class::getByWishlistId($id);
 
@@ -111,7 +127,7 @@ class DatabaseWishlist implements WishlistInterface
         }
     }
 
-    private function save()
+    private function save(): void
     {
         $items = $this->items;
         $identifier = $this->identifier;
@@ -128,8 +144,7 @@ class DatabaseWishlist implements WishlistInterface
                         'wishlist_id' =>  $id,
                         'identifier' => $identifier
                     ]);
-                }
-                catch (FetchException $exception) {
+                } catch (FetchException $exception) {
                     $item = new $this->model();
                     $item->created = time();
                     $item->updated = time();
@@ -144,13 +159,12 @@ class DatabaseWishlist implements WishlistInterface
         }
 
         if (count($saveIds)) {
+            $saveIds = array_map('intval', $saveIds);
             $itemsToDelete = $this->model::all('
                 WHERE id NOT IN (' . implode(',', $saveIds) . ')
                 AND identifier = ?
             ', $identifier);
-        }
-
-        else {
+        } else {
             $itemsToDelete = $this->model::all('WHERE identifier = ?', $identifier);
         }
 

@@ -42,7 +42,7 @@ interface WishlistInterface
 	/**
 	 * Gets all items
 	 *
-	 * @return array
+	 * @return array<int, WishlistItemInterface>
 	 */
 	public function getItems(): array;
 }

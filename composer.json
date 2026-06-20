@@ -3,6 +3,7 @@
   "description": "Wishlist for Oak",
   "keywords": ["fav", "list", "favorites", "wishlist", "oak"],
   "type": "library",
+  "license": "proprietary",
   "authors": [
     {
       "name": "Rein Van Oyen",
@@ -10,12 +11,39 @@
     }
   ],
   "require": {
-    "tallieutallieu/oak": "^1.0.0",
-    "tallieutallieu/dry-internal-api": "^1.0.2"
+    "php": "^8.2",
+    "tallieutallieu/dry": "^v3.8.1-beta.5|^4.0.0",
+    "tallieutallieu/dry-dbi": "^3.8.0",
+    "tallieutallieu/oak": "^3.0.2",
+    "tallieutallieu/dry-internal-api": "^3.0.2"
+  },
+  "require-dev": {
+    "pestphp/pest": "^3.8",
+    "phpstan/phpstan": "^2.1"
   },
   "autoload": {
     "psr-4": {
       "Tnt\\Wishlist\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@bitbucket.org:tallieu/dry3.git"
+    }
+  ],
+  "scripts": {
+    "phpstan": "phpstan analyse --memory-limit=512M",
+    "phpstan:baseline": "phpstan analyse --memory-limit=512M --generate-baseline"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
     }
   }
 }

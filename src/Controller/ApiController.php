@@ -9,7 +9,7 @@ use Tnt\Wishlist\Facade\Wishlist;
 
 class ApiController
 {
-	private static function validateClass(string $classname)
+	private static function validateClass(string $classname): void
 	{
 		if (! class_exists($classname)) {
 			throw new ApiException('class_not_found');
@@ -17,19 +17,22 @@ class ApiController
 
 		$implements = class_implements($classname);
 
-		if (! in_array(WishlistItemInterface::class, $implements)) {
+		if (! is_array($implements) || ! in_array(WishlistItemInterface::class, $implements, true)) {
 			throw new ApiException('invalid_class');
 		}
 	}
 
-	public static function items(Request $request)
+	/**
+	 * @return array<int, array<string, mixed>>
+	 */
+	public static function items(Request $request): array
 	{
-		return array_map(function($item) {
+		return array_map(function (WishlistItemInterface $item): array {
 			return $item->serialize();
 		}, Wishlist::getItems());
 	}
 
-	public static function toggle(Request $request)
+	public static function toggle(Request $request): bool
 	{
 		self::validateClass($request->data->string('class'));
 
@@ -50,7 +53,7 @@ class ApiController
 		return true;
 	}
 
-	public static function add(Request $request)
+	public static function add(Request $request): bool
 	{
 		self::validateClass($request->data->string('class'));
 
@@ -67,7 +70,7 @@ class ApiController
 		return true;
 	}
 
-	public static function remove(Request $request)
+	public static function remove(Request $request): bool
 	{
 		self::validateClass($request->data->string('class'));
 
@@ -84,7 +87,7 @@ class ApiController
 		return true;
 	}
 
-	public static function clear(Request $request)
+	public static function clear(Request $request): bool
 	{
 		Wishlist::clear();
 

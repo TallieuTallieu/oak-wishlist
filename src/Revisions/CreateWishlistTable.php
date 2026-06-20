@@ -2,16 +2,15 @@
 
 namespace Tnt\Wishlist\Revisions;
 
-use app\revisions\DatabaseRevision;
 use Oak\Contracts\Migration\RevisionInterface;
 use Tnt\Dbi\TableBuilder;
 
 class CreateWishlistTable extends DatabaseRevision implements RevisionInterface
 {
-    public function up()
+    public function up(): void
     {
-        $this->queryBuilder->table('wishlist')->create(function(TableBuilder $table) {
-            $table->addColumn('id', 'int')->length(11)->primaryKey();
+        $this->queryBuilder->table('wishlist')->create(function (TableBuilder $table): void {
+            $table->id();
             $table->addColumn('created', 'int')->length(11);
             $table->addColumn('updated', 'int')->length(11);
 
@@ -19,12 +18,15 @@ class CreateWishlistTable extends DatabaseRevision implements RevisionInterface
             $table->addColumn('wishlist_id', 'int')->length(11);
 
             $table->addColumn('identifier', 'int')->length(11)->null();
+
+            $table->addIndex('identifier');
+            $table->addIndex(['identifier', 'wishlist_class', 'wishlist_id']);
         });
 
         $this->execute();
     }
 
-    public function down()
+    public function down(): void
     {
         $this->queryBuilder->table('wishlist')->drop();
 
