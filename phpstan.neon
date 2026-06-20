@@ -1,0 +1,13 @@
+parameters:
+    level: 6
+    paths:
+        - src
+
+    checkMissingCallableSignature: true
+    checkUninitializedProperties: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkBenevolentUnionTypes: true
+
+    reportMaybesInMethodSignatures: true
+    reportStaticMethodSignatures: true
+    reportMaybesInPropertyPhpDocTypes: true

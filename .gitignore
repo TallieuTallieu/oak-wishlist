@@ -1,1 +1,12 @@
 .idea
+
+/vendor/
+.DS_Store
+.env
+node_modules/
+.yarn/
+yarn.lock
+
+/docker/db/
+docker/xdebug/log/**
+!docker/xdebug/log/.gitkeep

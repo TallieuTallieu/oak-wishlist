@@ -1,0 +1,44 @@
+services:
+  oak-wishlist-adminer:
+    image: adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: oak-wishlist-db
+      ADMINER_DESIGN: nette
+      UPLOAD_LIMIT: 10G
+    labels:
+      - "traefik.http.routers.oak-wishlist-adminer.rule=Host(`adminer.oak-wishlist.localhost`)"
+    networks:
+      - dev
+
+  oak-wishlist-db:
+    image: mysql:8.0.34
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./docker/db:/var/lib/mysql
+      - ./docker/db_init:/docker-entrypoint-initdb.d
+    command: --sql-mode="ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
+    networks:
+      - dev
+
+  oak-wishlist-dev:
+    build:
+      context: https://github.com/TallieuTallieu/dry-docker.git#php8.4
+    hostname: docker_app
+    volumes:
+      - ./:/var/www/html
+      - ./docker/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
+      - ./docker/xdebug/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini:ro
+      - ./docker/xdebug/log:/tmp/xdebug
+      - ~/.ssh:/root/.ssh:ro
+    command: /bin/bash -c 'eval $$(ssh-agent -s) && ssh-add ~/.ssh/id_rsa && composer install && apachectl -D FOREGROUND'
+    ports:
+      - "80"
+    labels:
+      - "traefik.http.routers.oak-wishlist-dev.rule=Host(`oak-wishlist.localhost`)"
+    networks:
+      - dev
+
+networks:
+  dev:
+    external: true
