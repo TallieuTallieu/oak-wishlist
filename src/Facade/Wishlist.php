@@ -16,8 +16,8 @@ use Tnt\Wishlist\Contracts\WishlistInterface;
  */
 class Wishlist extends Facade
 {
-	protected static function getContract(): string
-	{
-		return WishlistInterface::class;
-	}
+    protected static function getContract(): string
+    {
+        return WishlistInterface::class;
+    }
 }

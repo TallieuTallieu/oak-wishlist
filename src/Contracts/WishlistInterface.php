@@ -8,41 +8,41 @@ namespace Tnt\Wishlist\Contracts;
  */
 interface WishlistInterface
 {
-	/**
-	 * Add an item
-	 *
-	 * @param WishlistItemInterface $item
-	 * @return void
-	 */
-	public function add(WishlistItemInterface $item);
+    /**
+     * Add an item
+     *
+     * @param WishlistItemInterface $item
+     * @return void
+     */
+    public function add(WishlistItemInterface $item);
 
-	/**
-	 * Remove an item
-	 *
-	 * @param WishlistItemInterface $item
-	 * @return void
-	 */
-	public function remove(WishlistItemInterface $item);
+    /**
+     * Remove an item
+     *
+     * @param WishlistItemInterface $item
+     * @return void
+     */
+    public function remove(WishlistItemInterface $item);
 
-	/**
-	 * Checks if the item is on the wishlist
-	 *
-	 * @param WishlistItemInterface $item
-	 * @return bool
-	 */
-	public function has(WishlistItemInterface $item): bool;
+    /**
+     * Checks if the item is on the wishlist
+     *
+     * @param WishlistItemInterface $item
+     * @return bool
+     */
+    public function has(WishlistItemInterface $item): bool;
 
-	/**
-	 * Removes all items
-	 *
-	 * @return void
-	 */
-	public function clear(): void;
+    /**
+     * Removes all items
+     *
+     * @return void
+     */
+    public function clear(): void;
 
-	/**
-	 * Gets all items
-	 *
-	 * @return array<int, WishlistItemInterface>
-	 */
-	public function getItems(): array;
+    /**
+     * Gets all items
+     *
+     * @return array<int, WishlistItemInterface>
+     */
+    public function getItems(): array;
 }

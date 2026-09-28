@@ -8,116 +8,120 @@ use Tnt\Wishlist\Contracts\WishlistItemInterface;
 
 class SessionWishlist implements WishlistInterface
 {
-	/**
-	 * @var array<class-string, array<int>>
-	 */
-	private array $items = [];
+    /**
+     * @var array<class-string, array<int>>
+     */
+    private array $items = [];
 
-	/**
-	 * Wishlist constructor.
-	 */
-	public function __construct()
-	{
-		$this->restore();
-	}
+    /**
+     * Wishlist constructor.
+     */
+    public function __construct()
+    {
+        $this->restore();
+    }
 
-	/**
-	 * @param WishlistItemInterface $item
-	 */
-	public function add(WishlistItemInterface $item)
-	{
-		$classname = get_class($item);
+    /**
+     * @param WishlistItemInterface $item
+     */
+    public function add(WishlistItemInterface $item)
+    {
+        $classname = get_class($item);
 
         if ($this->has($item) || !$item->isWishlistable()) {
             return;
         }
 
-		if (!isset($this->items[$classname])) {
-			$this->items[$classname] = [];
-		}
+        if (!isset($this->items[$classname])) {
+            $this->items[$classname] = [];
+        }
 
-		$this->items[$classname][] = $item->getWishlistId();
-		$this->save();
-	}
+        $this->items[$classname][] = $item->getWishlistId();
+        $this->save();
+    }
 
-	/**
-	 * @param WishlistItemInterface $item
-	 * @return void
-	 */
-	public function remove(WishlistItemInterface $item)
-	{
-		$classname = get_class($item);
+    /**
+     * @param WishlistItemInterface $item
+     * @return void
+     */
+    public function remove(WishlistItemInterface $item)
+    {
+        $classname = get_class($item);
 
-		if (! $this->has($item)) {
-			return;
-		}
+        if (!$this->has($item)) {
+            return;
+        }
 
-		$classNameArray =& $this->items[$classname];
-		unset($classNameArray[array_search($item->getWishlistId(), $classNameArray)]);
+        $classNameArray = &$this->items[$classname];
+        unset(
+            $classNameArray[
+                array_search($item->getWishlistId(), $classNameArray)
+            ]
+        );
 
-		$this->save();
-	}
+        $this->save();
+    }
 
-	/**
-	 * @param WishlistItemInterface $item
-	 * @return bool
-	 */
-	public function has(WishlistItemInterface $item): bool
-	{
-		$classname = get_class($item);
+    /**
+     * @param WishlistItemInterface $item
+     * @return bool
+     */
+    public function has(WishlistItemInterface $item): bool
+    {
+        $classname = get_class($item);
 
-		return isset($this->items[$classname]) && in_array($item->getWishlistId(), $this->items[$classname]);
-	}
+        return isset($this->items[$classname]) &&
+            in_array($item->getWishlistId(), $this->items[$classname]);
+    }
 
-	/**
-	 * @return void
-	 */
-	public function clear(): void
-	{
-		$this->items = [];
-		$this->save();
-	}
+    /**
+     * @return void
+     */
+    public function clear(): void
+    {
+        $this->items = [];
+        $this->save();
+    }
 
-	/**
-	 * @return array<int, WishlistItemInterface>
-	 */
-	public function getItems(): array
-	{
-		$items = [];
+    /**
+     * @return array<int, WishlistItemInterface>
+     */
+    public function getItems(): array
+    {
+        $items = [];
 
-		foreach ($this->items as $classname => $ids) {
+        foreach ($this->items as $classname => $ids) {
+            if (!class_exists($classname)) {
+                continue;
+            }
 
-			if (! class_exists($classname)) {
-				continue;
-			}
+            foreach ($ids as $id) {
+                $item = $classname::getByWishlistId($id);
+                if (!$item) {
+                    continue;
+                }
+                $items[] = $item;
+            }
+        }
 
-			foreach ($ids as $id) {
-				$item = $classname::getByWishlistId($id);
-				if (! $item) {
-					continue;
-				}
-				$items[] = $item;
-			}
-		}
+        return $items;
+    }
 
-		return $items;
-	}
+    /**
+     * Restores the items from the session
+     */
+    private function restore(): void
+    {
+        $items = Session::get('wishlist');
+        $this->items = is_array($items) ? $items : [];
+    }
 
-	/**
-	 * Restores the items from the session
-	 */
-	private function restore(): void
-	{
-		$items = Session::get('wishlist');
-		$this->items = is_array($items) ? $items : [];
-	}
-
-	/**
-	 * Saves the items to the session
-	 */
-	private function save(): void
-	{
-		Session::set('wishlist', $this->items);
-		Session::save();
-	}
+    /**
+     * Saves the items to the session
+     */
+    private function save(): void
+    {
+        Session::set('wishlist', $this->items);
+        Session::save();
+    }
 }
