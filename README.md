@@ -18,9 +18,7 @@ Register the service provider in your Oak application:
 ```php
 <?php
 
-$app->register([
-    \Tnt\Wishlist\WishlistServiceProvider::class,
-]);
+$app->register([\Tnt\Wishlist\WishlistServiceProvider::class]);
 ```
 
 ## Configuration
@@ -37,11 +35,11 @@ return [
 ];
 ```
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `driver` | `database` | `database` or `session`. |
-| `model` | `Tnt\Wishlist\Model\Wishlist::class` | dry ORM model used by the database driver. |
-| `identifier` | none | Class bound as `WishlistableInterface`; required for the database driver. |
+| Option       | Default                              | Description                                                               |
+| ------------ | ------------------------------------ | ------------------------------------------------------------------------- |
+| `driver`     | `database`                           | `database` or `session`.                                                  |
+| `model`      | `Tnt\Wishlist\Model\Wishlist::class` | dry ORM model used by the database driver.                                |
+| `identifier` | none                                 | Class bound as `WishlistableInterface`; required for the database driver. |
 
 The configured identifier class must implement `Tnt\Wishlist\Contracts\WishlistableInterface`.
 
@@ -153,13 +151,13 @@ Wishlist::clear();
 
 The service provider registers these dry-internal-api routes:
 
-| Method | Path | Description |
-| --- | --- | --- |
-| `GET` | `wishlist/items/` | Return serialized wishlist items. |
-| `GET` | `wishlist/toggle/` | Toggle an item by `class` and `id`. |
-| `GET` | `wishlist/add/` | Add an item by `class` and `id`. |
-| `GET` | `wishlist/remove/` | Remove an item by `class` and `id`. |
-| `GET` | `wishlist/clear/` | Clear the wishlist. |
+| Method | Path               | Description                         |
+| ------ | ------------------ | ----------------------------------- |
+| `GET`  | `wishlist/items/`  | Return serialized wishlist items.   |
+| `GET`  | `wishlist/toggle/` | Toggle an item by `class` and `id`. |
+| `GET`  | `wishlist/add/`    | Add an item by `class` and `id`.    |
+| `GET`  | `wishlist/remove/` | Remove an item by `class` and `id`. |
+| `GET`  | `wishlist/clear/`  | Clear the wishlist.                 |
 
 The item mutation endpoints expect:
 

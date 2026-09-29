@@ -6,7 +6,7 @@ services:
       ADMINER_DESIGN: nette
       UPLOAD_LIMIT: 10G
     labels:
-      - "traefik.http.routers.oak-wishlist-adminer.rule=Host(`adminer.oak-wishlist.localhost`)"
+      - 'traefik.http.routers.oak-wishlist-adminer.rule=Host(`adminer.oak-wishlist.localhost`)'
     networks:
       - dev
 
@@ -33,9 +33,9 @@ services:
       - ~/.ssh:/root/.ssh:ro
     command: /bin/bash -c 'eval $$(ssh-agent -s) && ssh-add ~/.ssh/id_rsa && composer install && apachectl -D FOREGROUND'
     ports:
-      - "80"
+      - '80'
     labels:
-      - "traefik.http.routers.oak-wishlist-dev.rule=Host(`oak-wishlist.localhost`)"
+      - 'traefik.http.routers.oak-wishlist-dev.rule=Host(`oak-wishlist.localhost`)'
     networks:
       - dev
 

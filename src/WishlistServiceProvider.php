@@ -15,37 +15,50 @@ use Tnt\Wishlist\Revisions\CreateWishlistTable;
 
 class WishlistServiceProvider extends ServiceProvider
 {
-	public function boot(ContainerInterface $app)
-	{
+    public function boot(ContainerInterface $app)
+    {
         $config = $app->get(RepositoryInterface::class);
         $driver = $config->get('wishlist.driver') ?? 'database';
 
-		Api::get('wishlist/items/', '\\Tnt\\Wishlist\\Controller\\ApiController::items');
-		Api::get('wishlist/toggle/', '\\Tnt\\Wishlist\\Controller\\ApiController::toggle');
-		Api::get('wishlist/add/', '\\Tnt\\Wishlist\\Controller\\ApiController::add');
-		Api::get('wishlist/remove/', '\\Tnt\\Wishlist\\Controller\\ApiController::remove');
-		Api::get('wishlist/clear/', '\\Tnt\\Wishlist\\Controller\\ApiController::clear');
+        Api::get(
+            'wishlist/items/',
+            '\\Tnt\\Wishlist\\Controller\\ApiController::items'
+        );
+        Api::get(
+            'wishlist/toggle/',
+            '\\Tnt\\Wishlist\\Controller\\ApiController::toggle'
+        );
+        Api::get(
+            'wishlist/add/',
+            '\\Tnt\\Wishlist\\Controller\\ApiController::add'
+        );
+        Api::get(
+            'wishlist/remove/',
+            '\\Tnt\\Wishlist\\Controller\\ApiController::remove'
+        );
+        Api::get(
+            'wishlist/clear/',
+            '\\Tnt\\Wishlist\\Controller\\ApiController::clear'
+        );
 
         if ($app->isRunningInConsole() && $driver === 'database') {
             $migrator = $app->getWith(Migrator::class, [
-                'name' => 'wishlist'
+                'name' => 'wishlist',
             ]);
 
-            $migrator->setRevisions([
-                CreateWishlistTable::class,
-            ]);
+            $migrator->setRevisions([CreateWishlistTable::class]);
 
             $app->get(MigrationManager::class)->addMigrator($migrator);
         }
-	}
+    }
 
-	public function register(ContainerInterface $app)
-	{
+    public function register(ContainerInterface $app)
+    {
         $config = $app->get(RepositoryInterface::class);
         $driver = $config->get('wishlist.driver') ?? 'database';
 
         if ($driver === 'session') {
-		    $app->singleton(WishlistInterface::class, SessionWishlist::class);
+            $app->singleton(WishlistInterface::class, SessionWishlist::class);
         }
 
         if ($driver === 'database') {
@@ -63,5 +76,5 @@ class WishlistServiceProvider extends ServiceProvider
 
             $app->whenAsksGive(DatabaseWishlist::class, 'model', $model);
         }
-	}
+    }
 }
