@@ -10,22 +10,16 @@
   ],
   "type": "library",
   "license": "proprietary",
-  "authors": [
-    {
-      "name": "Rein Van Oyen",
-      "email": "reinvanoyen@gmail.com"
-    }
-  ],
   "require": {
-    "php": "^8.2",
-    "tallieutallieu/dry": "^v3.8.1-beta.5|^4.0.0",
-    "tallieutallieu/dry-dbi": "^3.8.0",
-    "tallieutallieu/oak": "^3.0.2",
-    "tallieutallieu/dry-internal-api": "^3.0.2"
+    "php": "^8.4",
+    "tallieutallieu/dry": "^4.6.2",
+    "tallieutallieu/dry-dbi": "^3.13.3",
+    "tallieutallieu/oak": "^4.3.0",
+    "tallieutallieu/dry-internal-api": "^4.0.0"
   },
   "require-dev": {
-    "pestphp/pest": "^3.8",
-    "phpstan/phpstan": "^2.1"
+    "pestphp/pest": "^5.2.1",
+    "phpstan/phpstan": "^2.2.16"
   },
   "autoload": {
     "psr-4": {
